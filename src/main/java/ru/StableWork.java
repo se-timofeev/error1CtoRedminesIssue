@@ -9,6 +9,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 public class StableWork {
 
     public static void main(String[] args) {
+
         SpringApplication.run(StableWork.class, args);
     }
 

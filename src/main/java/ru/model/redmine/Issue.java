@@ -14,7 +14,6 @@ import java.util.ArrayList;
 public class Issue {
     private String project;
     private String tracker;
-    private String status;
     private String priority;
     private String user;
     private LocalDateTime time;
