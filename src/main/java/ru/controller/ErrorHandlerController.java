@@ -24,9 +24,9 @@ import java.util.zip.ZipInputStream;
 @RestController
 public class ErrorHandlerController {
 
-@Autowired
-private Environment env;
-private Redmine redmine;
+    @Autowired
+    private Environment env;
+    private Redmine redmine;
 
     public ErrorHandlerController(Environment env, Redmine redmine) {
         this.env = env;
@@ -61,22 +61,22 @@ private Redmine redmine;
     }
 
     private void FileHandler(MultipartFile file) throws IOException {
-        Map<Object, LinkedHashMap<Object,Object>> reportMap = getReportMap(file);
-        Issue issue=prepearIssue(reportMap);
+        Map<Object, LinkedHashMap<Object, Object>> reportMap = getReportMap(file);
+        Issue issue = prepearIssue(reportMap);
         redmine.addIssue(IssueDto.fromIssue(issue));
 
     }
 
-    private Issue prepearIssue(Map<Object, LinkedHashMap<Object,Object>> reportMap) throws JsonProcessingException {
+    private Issue prepearIssue(Map<Object, LinkedHashMap<Object, Object>> reportMap) throws JsonProcessingException {
 
-        Issue issue=new Issue();
+        Issue issue = new Issue();
         issue.setProject(env.getProperty("project"));
         issue.setPriority("5");
         issue.setTracker("Ошибка");
-        LinkedHashMap <Object,Object> sessionInfo=reportMap.get("sessionInfo");
+        LinkedHashMap<Object, Object> sessionInfo = reportMap.get("sessionInfo");
         issue.setUser((String) sessionInfo.get("userName"));
         issue.setSubject(getSubject(reportMap));
-        issue.setDescription(getDescription(reportMap)) ;
+        issue.setDescription(getDescription(reportMap));
         issue.setParentIssueId("131");
         return issue;
     }
@@ -86,28 +86,27 @@ private Redmine redmine;
         LinkedHashMap<Object, Object> errorInfo = reportMap.get("errorInfo");
         LinkedHashMap<Object, Object> applicationErrorInfo = (LinkedHashMap<Object, Object>) errorInfo.get("applicationErrorInfo");
         List<Object> errors = (List<Object>) applicationErrorInfo.get("errors");
-         List<Object> error1= (List<Object>) errors.get(0);
-        List<Object> error2= (List<Object>) errors.get(1);
+        List<Object> error1 = (List<Object>) errors.get(0);
 
+        String err = error1.get(0).toString();
 
-        String err= error1.get(0).toString();
-
-         if (err.isEmpty()  ){
-             err=error2.get(0).toString();
-         }
+        if (err.isEmpty()) {
+            List<Object> error2 = (List<Object>) errors.get(1);
+            err = error2.get(0).toString();
+        }
 
         return err;
     }
 
     private String getDescription(Map<Object, LinkedHashMap<Object, Object>> reportMap) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
-        String description =  mapper.writeValueAsString(reportMap);
+        String description = mapper.writeValueAsString(reportMap);
 
         return description;
     }
 
-    private Map<Object, LinkedHashMap<Object,Object>> getReportMap(MultipartFile file) throws IOException {
-        Map<Object, LinkedHashMap<Object,Object>> map = new HashMap<>();
+    private Map<Object, LinkedHashMap<Object, Object>> getReportMap(MultipartFile file) throws IOException {
+        Map<Object, LinkedHashMap<Object, Object>> map = new HashMap<>();
         ZipInputStream zin = new ZipInputStream(file.getInputStream());
         ZipEntry zipEntry = zin.getNextEntry();
 
