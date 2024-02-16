@@ -100,7 +100,7 @@ public class ErrorHandlerController {
 
     private String getDescription(Map<Object, LinkedHashMap<Object, Object>> reportMap) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
-        String description = mapper.writeValueAsString(reportMap);
+        String description = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(reportMap);
 
         return description;
     }

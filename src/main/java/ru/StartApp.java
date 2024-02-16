@@ -6,11 +6,11 @@ import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication
 @EnableAsync
-public class StableWork {
+public class StartApp {
 
     public static void main(String[] args) {
 
-        SpringApplication.run(StableWork.class, args);
+        SpringApplication.run(StartApp.class, args);
     }
 
 }
